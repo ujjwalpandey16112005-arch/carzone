@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BATHINDA_CARZONE | Best Cars in Punjab</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">BATHINDA_<span class="highlight">CARZONE</span></div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#inventory">Inventory</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Find Your Dream Car in Bathinda</h1>
+            <p>Certified Pre-Owned Vehicles at Unbeatable Prices.</p>
+            <a href="#inventory" class="cta-button">View Showroom</a>
+        </div>
+    </header>
+
+    <section id="inventory" class="inventory">
+        <div class="section-header">
+            <h2>Our Premium Collection</h2>
+            <p>Select a category to filter the list</p>
+        </div>
+        
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterCars('all')">Show All</button>
+            <button class="filter-btn" onclick="filterCars('sedan')">Sedans</button>
+            <button class="filter-btn" onclick="filterCars('suv')">SUVs</button>
+            <button class="filter-btn" onclick="filterCars('luxury')">Luxury</button>
+        </div>
+
+        <div class="car-grid" id="carGrid">
+            
+            <div class="car-card sedan">
+                <img src="https://stimg.cardekho.com/images/carexteriorimages/930x620/Ford/Mustang-2024/7939/1663750110692/front-left-side-47.jpg" alt="Sedan">
+                <div class="car-info">
+                    <span class="tag">Just Arrived</span>
+                    <h3>Mustang</h3>
+                    <p class="price">₹ 25,00,000</p>
+                    <button class="inquire-btn" onclick="inquire(mustang')">Interested</button>
+                </div>
+            </div>
+
+            <div class="car-card suv">
+                <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=500&q=60" alt="SUV">
+                <div class="car-info">
+                    <span class="tag">Best Seller</span>
+                    <h3>Fortuner Legender</h3>
+                    <p class="price">₹ 42,00,000</p>
+                    <button class="inquire-btn" onclick="inquire('Fortuner Legender')">Interested</button>
+                </div>
+            </div>
+
+            <div class="car-card luxury">
+                <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=500&q=60" alt="Luxury Car">
+                <div class="car-info">
+                    <span class="tag">Premium</span>
+                    <h3>BMW 5 Series</h3>
+                    <p class="price">₹ 55,00,000</p>
+                    <button class="inquire-btn" onclick="inquire('BMW 5 Series')">Interested</button>
+                </div>
+            </div>
+
+             <div class="car-card suv">
+                  <img src="c:\Users\dell\Desktop\malwa zone\WhatsApp Image 2026-02-17 at 20.59.36.jpeg" alt="Volkswagen Polo">
+    
+    <div class="car-info">
+        <span class="tag">Best Deal</span>
+        <h3>Volkswagen Polo GT</h3>
+        <p class="price">₹ 5,50,000</p> 
+        <button class="inquire-btn" onclick="inquire('Volkswagen Polo')">Interested</button>
+    </div>
+</div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <h2>Visit Us Today</h2>
+            <p>100 Feet Road, Near Ghorz Chowk, Bathinda, Punjab</p>
+            <p><strong>Call:</strong> +91 8264561611- | <strong>Email:</strong> pandeyujjwal16112@gmail.com</p>
+            <p class="copyright">&copy; 2026 BATHINDA_CARZONE. Driving Punjab Forward.</p>
+        </div>
+    </footer>
+
+    <script src="script.JS"></script>
+</body>
+</html>
