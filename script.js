@@ -1,105 +1,87 @@
-// Function 1: Filter Logic
-function filterCars(category) {
-    const cars = document.querySelectorAll('.car-card');
-    const buttons = document.querySelectorAll('.filter-btn');
+/**
+ * CARZONE - Professional Script
+ * Handles: 1. WhatsApp Redirection 
+ * 2. Backend Logging (Render)
+ * 3. Car Filtering Logic
+ */
 
-    // 1. Manage Button Styling
-    buttons.forEach(btn => {
-        // Remove 'active' class from all buttons
-        btn.classList.remove('active');
+// 1. Configuration
+const API_URL = "https://carzone-7fpo.onrender.com";
+const MY_NUMBER = "918264561611";
+
+// 2. Main Inquiry Function
+async function handleInquiry(btn) {
+    try {
+        // Find the specific car card where the button was clicked
+        const carCard = btn.closest('.car-card');
+        let carName = "Premium Car";
         
-        // Add 'active' class only to the clicked button
-        // We use event.target logic here implicitly by adding onclick in HTML
-        if(btn.innerText.toLowerCase().includes(category) || 
-          (category === 'all' && btn.innerText === 'Show All')) {
-            btn.classList.add('active');
-        }
-    });
-
-    // 2. Manage Car Visibility
-    cars.forEach(car => {
-        if (category === 'all') {
-            car.style.display = 'block';
-            // Animation for smooth reappearance
-            car.style.animation = 'fadeIn 0.5s ease';
-        } else {
-            if (car.classList.contains(category)) {
-                car.style.display = 'block';
-                car.style.animation = 'fadeIn 0.5s ease';
-            } else {
-                car.style.display = 'none';
+        if (carCard) {
+            // Find the <h3> tag inside that card
+            const titleElement = carCard.querySelector('h3');
+            if (titleElement) {
+                carName = titleElement.innerText;
             }
         }
+
+        // Ask user for their phone number
+        const userPhone = prompt(`Inquiring for: ${carName}\nPlease enter your WhatsApp number:`);
+
+        // Validation: If user cancels or leaves it empty
+        if (!userPhone || userPhone.trim() === "") {
+            alert("Valid phone number is required to proceed!");
+            return;
+        }
+
+        // --- STEP A: OPEN WHATSAPP IMMEDIATELY ---
+        // (Doing this first prevents the browser from blocking the popup)
+        const message = `Hello Carzone! I am interested in the *${carName}*. My contact number is ${userPhone}. Please share more details.`;
+        const whatsappUrl = `https://wa.me/${MY_NUMBER}?text=${encodeURIComponent(message)}`;
+        
+        console.log("Redirecting to WhatsApp...");
+        window.open(whatsappUrl, '_blank');
+
+        // --- STEP B: SEND DATA TO RENDER BACKEND ---
+        // We do this in the background so the user doesn't have to wait
+        fetch(`${API_URL}/api/inquire`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                carName: carName, 
+                phoneNumber: userPhone 
+            })
+        })
+        .then(() => console.log("Data successfully logged to Render backend."))
+        .catch(() => console.log("Backend is currently waking up, but WhatsApp opened fine!"));
+
+    } catch (error) {
+        console.error("Critical JS Error:", error);
+        alert("Something went wrong. Please try again.");
+    }
+}
+
+// 3. Filter Logic for Sedan, SUV, etc.
+function filterCars(category) {
+    const cards = document.querySelectorAll('.car-card');
+    const buttons = document.querySelectorAll('.filter-btn');
+
+    // Update active button styling
+    buttons.forEach(btn => btn.classList.remove('active'));
+    // Highlight the clicked button
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
+
+    // Show/Hide cards based on category class
+    cards.forEach(card => {
+        if (category === 'all' || card.classList.contains(category)) {
+            card.style.display = 'block';
+            card.style.animation = 'fadeIn 0.5s ease forwards';
+        } else {
+            card.style.display = 'none';
+        }
     });
 }
 
-// Function 2: Inquiry Popup
-
-
-function inquasync function inquire(carModel) {
-    const customerPhone = prompt("Please enter your phone number for Bathinda CarZone:");
-
-    if (!customerPhone) return;
-
-    try {
-        const response = await fetch('http://localhost:5000/api/inquire', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                carModel: carModel,
-                customerName: "Guest User",
-                phone: customerPhone
-            })
-        });
-
-        const data = await response.json();
-        
-        if (data.success) {
-            alert(data.message);
-        }
-    } catch (error) {
-        console.error("Error connecting to backend:", error);
-        alert("Backend is not running!");
-    }
-}
-
-// Optional: Add simple fade animation
-const styleSheet = document.createElement("style");
-styleSheet.innerText = `
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-`;
-
-
-async function handleInquiry(buttonElement) {
-    let carName = "General Inquiry";
-    
-    // Try to find the car name if the button is inside a card
-    const carCard = buttonElement.closest('.car-card');
-    if (carCard) {
-        const nameElement = carCard.querySelector('h1, h2, h3');
-        if (nameElement) carName = nameElement.innerText;
-    }
-
-    const userPhone = prompt(`Inquiry for: ${carName}\nEnter your WhatsApp number:`);
-
-    if (!userPhone) return;
-
-    // 🟢 OPEN WHATSAPP IMMEDIATELY
-    const myNumber = "918264561611";
-    const message = `Hello! I am interested in ${carName}. My number is ${userPhone}.`;
-    const whatsappUrl = `https://wa.me/${myNumber}?text=${encodeURIComponent(message)}`;
-    
-    window.open(whatsappUrl, '_blank');
-
-    // 🔵 Send to Render in background
-    fetch("https://carzone-7fpo.onrender.com/api/inquire", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ carName, phoneNumber: userPhone })
-    }).catch(err => console.log("Backend offline, but WhatsApp opened!"));
-}
-
-document.head.appendChild(styleSheet);
+// 4. Console Welcome Message
+console.log("Carzone Script Loaded Successfully. Ready for Inquiries!");
