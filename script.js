@@ -71,4 +71,39 @@ styleSheet.innerText = `
   to { opacity: 1; transform: translateY(0); }
 }
 `;
+
+// --- WHATSAPP & BACKEND INTEGRATION ---
+const API_URL = "https://carzone-7fpo.onrender.com";
+const MY_WHATSAPP = "918264561611";
+
+async function handleInquiry(carName) {
+    const userPhone = prompt(`Inquiry for: ${carName}\nPlease enter your WhatsApp number:`);
+
+    if (!userPhone || userPhone.trim() === "") {
+        alert("Number is required!");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/api/inquire`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ carName: carName, phoneNumber: userPhone })
+        });
+
+        if (response.ok) {
+            const message = `Hello Carzone! I am interested in the *${carName}*. My contact number is ${userPhone}.`;
+            const whatsappUrl = `https://wa.me/${MY_WHATSAPP}?text=${encodeURIComponent(message)}`;
+            
+            alert("Opening WhatsApp...");
+            window.open(whatsappUrl, '_blank');
+        } else {
+            alert("Backend is starting up. Try again in 30 seconds!");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Server connection error.");
+    }
+}
+
 document.head.appendChild(styleSheet);
