@@ -72,38 +72,34 @@ styleSheet.innerText = `
 }
 `;
 
-// --- WHATSAPP & BACKEND INTEGRATION ---
-const API_URL = "https://carzone-7fpo.onrender.com";
-const MY_WHATSAPP = "918264561611";
 
-async function handleInquiry(carName) {
-    const userPhone = prompt(`Inquiry for: ${carName}\nPlease enter your WhatsApp number:`);
-
-    if (!userPhone || userPhone.trim() === "") {
-        alert("Number is required!");
-        return;
+async function handleInquiry(buttonElement) {
+    let carName = "General Inquiry";
+    
+    // Try to find the car name if the button is inside a card
+    const carCard = buttonElement.closest('.car-card');
+    if (carCard) {
+        const nameElement = carCard.querySelector('h1, h2, h3');
+        if (nameElement) carName = nameElement.innerText;
     }
 
-    try {
-        const response = await fetch(`${API_URL}/api/inquire`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ carName: carName, phoneNumber: userPhone })
-        });
+    const userPhone = prompt(`Inquiry for: ${carName}\nEnter your WhatsApp number:`);
 
-        if (response.ok) {
-            const message = `Hello Carzone! I am interested in the *${carName}*. My contact number is ${userPhone}.`;
-            const whatsappUrl = `https://wa.me/${MY_WHATSAPP}?text=${encodeURIComponent(message)}`;
-            
-            alert("Opening WhatsApp...");
-            window.open(whatsappUrl, '_blank');
-        } else {
-            alert("Backend is starting up. Try again in 30 seconds!");
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        alert("Server connection error.");
-    }
+    if (!userPhone) return;
+
+    // 🟢 OPEN WHATSAPP IMMEDIATELY
+    const myNumber = "918264561611";
+    const message = `Hello! I am interested in ${carName}. My number is ${userPhone}.`;
+    const whatsappUrl = `https://wa.me/${myNumber}?text=${encodeURIComponent(message)}`;
+    
+    window.open(whatsappUrl, '_blank');
+
+    // 🔵 Send to Render in background
+    fetch("https://carzone-7fpo.onrender.com/api/inquire", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ carName, phoneNumber: userPhone })
+    }).catch(err => console.log("Backend offline, but WhatsApp opened!"));
 }
 
 document.head.appendChild(styleSheet);
