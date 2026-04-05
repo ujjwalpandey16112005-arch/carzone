@@ -4,105 +4,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BATHINDA_CARZONE | Best Cars in Punjab</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Carzone | Premium Car Collection</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Basic styling to ensure it looks good immediately */
+        body { font-family: 'Poppins', sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        header { background: #333; color: white; padding: 2rem; text-align: center; }
+        .filters { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
+        .filter-btn { padding: 10px 20px; border: none; border-radius: 25px; cursor: pointer; background: white; transition: 0.3s; }
+        .filter-btn.active { background: #ff4757; color: white; }
+        .car-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .car-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: 0.3s; }
+        .car-card:hover { transform: translateY(-5px); }
+        .car-card img { width: 100%; height: 200px; object-fit: cover; }
+        .car-info { padding: 20px; text-align: center; }
+        .price { color: #ff4757; font-weight: bold; font-size: 1.2rem; }
+        .inquire-btn { background: #25d366; color: white; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-weight: 600; margin-top: 10px; width: 100%; }
+        .inquire-btn:hover { background: #128c7e; }
+        .tag { background: #eee; font-size: 0.8rem; padding: 3px 10px; border-radius: 10px; }
+    </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="logo">BATHINDA_<span class="highlight">CARZONE</span></div>
-        <ul class="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#inventory">Inventory</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+<header>
+    <h1>Carzone Bathinda</h1>
+    <p>Find your dream car today</p>
+</header>
 
-    <header id="home" class="hero">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1>Find Your Dream Car in Bathinda</h1>
-            <p>Certified Pre-Owned Vehicles at Unbeatable Prices.</p>
-            <a href="#inventory" class="cta-button">View Showroom</a>
-        </div>
-    </header>
-
-    <section id="inventory" class="inventory">
-        <div class="section-header">
-            <h2>Our Premium Collection</h2>
-            <p>Select a category to filter the list</p>
-        </div>
-        
-        <div class="filters">
-            <button class="filter-btn active" onclick="filterCars('all')">Show All</button>
-            <button class="filter-btn" onclick="filterCars('sedan')">Sedans</button>
-            <button class="filter-btn" onclick="filterCars('suv')">SUVs</button>
-            <button class="filter-btn" onclick="filterCars('luxury')">Luxury</button>
-            <button onclick="handleInquiry(this)">Inquire Now</button>
-        </div>
-<div class="car-card sedan">
-    <img src="car-image.jpg" alt="BMW M5">
-    <h3>BMW M5</h3>
-    <p>Price: ₹1.5 Crore</p>
-    <button class="inquire-btn" onclick="handleInquiry(this)">Inquire Now</button>
-</div> <div class="car-grid" id="carGrid">
-    <div class="car-card sedan">
-        <img src="https://stimg.cardekho.com/images/carexteriorimages/930x620/Ford/Mustang/047.jpg" alt="Mustang">
-        <div class="car-info">
-            <span class="tag">Just Arrived</span>
-            <h3>Mustang</h3>
-            <p class="price">₹ 25,00,000</p>
-            <button class="inquire-btn" onclick="handleInquiry(this)">Inquire Now</button>
-        </div>
+<section id="inventory">
+    <div class="section-header" style="text-align: center; margin-top: 30px;">
+        <h2>Our Premium Collection</h2>
+        <p>Select a category to filter the list</p>
     </div>
-</div>
-        <button class="inquire-btn" onclick="inquire(mustang')">Interested</button>
-                </div>
-            </div>
 
-            <div class="car-card suv">
-                <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=500&q=60" alt="SUV">
-                <div class="car-info">
-                    <span class="tag">Best Seller</span>
-                    <h3>Fortuner Legender</h3>
-                    <p class="price">₹ 42,00,000</p>
-                    <button class="inquire-btn" onclick="inquire('Fortuner Legender')">Interested</button>
-                </div>
-            </div>
-
-            <div class="car-card luxury">
-                <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=500&q=60" alt="Luxury Car">
-                <div class="car-info">
-                    <span class="tag">Premium</span>
-                    <h3>BMW 5 Series</h3>
-                    <p class="price">₹ 55,00,000</p>
-                    <button class="inquire-btn" onclick="inquire('BMW 5 Series')">Interested</button>
-                </div>
-            </div>
-
-             <div class="car-card suv">
-                  <img src="c:\Users\dell\Desktop\malwa zone\WhatsApp Image 2026-02-17 at 20.59.36.jpeg" alt="Volkswagen Polo">
-    
-    <div class="car-info">
-        <span class="tag">Best Deal</span>
-        <h3>Volkswagen Polo GT</h3>
-        <p class="price">₹ 5,50,000</p> 
-        <button class="inquire-btn" onclick="inquire('Volkswagen Polo')">Interested</button>
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterCars('all')">Show All</button>
+        <button class="filter-btn" onclick="filterCars('sedan')">Sedans</button>
+        <button class="filter-btn" onclick="filterCars('suv')">SUVs</button>
+        <button class="filter-btn" onclick="filterCars('luxury')">Luxury</button>
     </div>
-</div>
-        </div>
-    </section>
 
-    <footer id="contact">
-        <div class="footer-content">
-            <h2>Visit Us Today</h2>
-            <p>100 Feet Road, Near Ghorz Chowk, Bathinda, Punjab</p>
-            <p><strong>Call:</strong> +91 8264561611- | <strong>Email:</strong> pandeyujjwal16112@gmail.com</p>
-            <p class="copyright">&copy; 2026 BATHINDA_CARZONE. Driving Punjab Forward.</p>
-        </div>
-    </footer>
+    <div class="car-grid" id="carGrid">
 
-    <script src="script.js"></script>
+        <div class="car-card sedan luxury">
+            <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80&w=1000" alt="BMW M5">
+            <div class="car-info">
+                <span class="tag">Luxury Sedan</span>
+                <h3>BMW M5</h3>
+                <p class="price">₹ 1.5 Crore</p>
+                <button class="inquire-btn" onclick="handleInquiry(this)">Inquire Now</button>
+            </div>
+        </div>
+
+        <div class="car-card sedan">
+            <img src="https://stimg.cardekho.com/images/carexteriorimages/930x620/Ford/Mustang/047.jpg" alt="Ford Mustang">
+            <div class="car-info">
+                <span class="tag">Just Arrived</span>
+                <h3>Ford Mustang</h3>
+                <p class="price">₹ 75,00,000</p>
+                <button class="inquire-btn" onclick="handleInquiry(this)">Inquire Now</button>
+            </div>
+        </div>
+
+        <div class="car-card suv">
+            <img src="https://images.unsplash.com/photo-1663155182963-71869e061803?auto=format&fit=crop&q=80&w=1000" alt="Mahindra Scorpio">
+            <div class="car-info">
+                <span class="tag">Top SUV</span>
+                <h3>Mahindra Scorpio</h3>
+                <p class="price">₹ 18,00,000</p>
+                <button class="inquire-btn" onclick="handleInquiry(this)">Inquire Now</button>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script src="script.js"></script>
+
 </body>
-</html> 
+</html>
