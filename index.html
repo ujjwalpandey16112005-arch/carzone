@@ -17,7 +17,6 @@
         .car-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.4s; position: relative; border: 1px solid #eee; }
         .car-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
         
-        /* Fixed Image Issue */
         .car-card img { width: 100%; height: 220px; object-fit: cover; display: block; background: #ddd; }
         
         .car-info { padding: 20px; text-align: left; }
@@ -26,6 +25,61 @@
         .inquire-btn { background: #25d366; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; font-size: 1rem; transition: 0.3s; }
         .inquire-btn:hover { background: #128c7e; transform: scale(1.02); }
         .tag { position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.9); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+
+        /* --- CUSTOM CHATBOT STYLES --- */
+        #chatbot-btn {
+            position: fixed; bottom: 30px; right: 30px;
+            background: #ff4757; color: white;
+            border: none; border-radius: 50%;
+            width: 60px; height: 60px;
+            font-size: 24px; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: 0.3s; z-index: 1000;
+        }
+        #chatbot-btn:hover { transform: scale(1.1); background: #e8414e; }
+        
+        #chat-window {
+            position: fixed; bottom: 100px; right: 30px;
+            width: 320px; height: 400px;
+            background: white; border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            display: none; flex-direction: column;
+            overflow: hidden; z-index: 1000;
+            border: 1px solid #ddd;
+        }
+        
+        .chat-header {
+            background: #222; color: white;
+            padding: 15px; font-weight: 600;
+            display: flex; justify-content: space-between;
+            align-items: center;
+        }
+        .close-chat { cursor: pointer; color: #ff4757; font-weight: bold; }
+        
+        #chat-messages {
+            flex-grow: 1; padding: 15px;
+            overflow-y: auto; background: #f8f9fa;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        
+        .msg { padding: 10px 14px; border-radius: 15px; max-width: 80%; font-size: 0.9rem; }
+        .bot-msg { background: #e9ecef; color: #333; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .user-msg { background: #ff4757; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        
+        .chat-input-area {
+            display: flex; padding: 10px; border-top: 1px solid #eee; background: white;
+        }
+        .chat-input-area input {
+            flex-grow: 1; border: 1px solid #ccc;
+            border-radius: 20px; padding: 10px 15px;
+            outline: none; font-family: 'Poppins', sans-serif;
+        }
+        .chat-input-area button {
+            background: #222; color: white; border: none;
+            padding: 10px 15px; margin-left: 10px;
+            border-radius: 20px; cursor: pointer; transition: 0.3s;
+        }
+        .chat-input-area button:hover { background: #ff4757; }
     </style>
 </head>
 <body>
@@ -42,7 +96,6 @@
 </div>
 
 <div class="car-grid" id="carGrid">
-
     <div class="car-card sedan">
         <span class="tag">Luxury</span>
         <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1000&auto=format&fit=crop" alt="BMW M5">
@@ -72,20 +125,95 @@
             <button class="inquire-btn" onclick="handleInquiry(this)">Inquire Now</button>
         </div>
     </div>
-
 </div>
 
-<script src="script.js"></script>
-<!-- Start of LiveChat (www.livechat.com) code -->
+<!-- --- CUSTOM CHATBOT UI --- -->
+<button id="chatbot-btn" onclick="toggleChat()">💬</button>
+
+<div id="chat-window">
+    <div class="chat-header">
+        <span>Carzone Assistant</span>
+        <span class="close-chat" onclick="toggleChat()">✖</span>
+    </div>
+    <div id="chat-messages">
+        <div class="msg bot-msg">Sat Sri Akal! Welcome to Carzone. How can I help you find your dream car today?</div>
+    </div>
+    <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Ask about a car...">
+        <button onclick="sendUserMessage()">Send</button>
+    </div>
+</div>
+
 <script>
-    window.__lc = window.__lc || {};
-    window.__lc.license = 19657097;
-    window.__lc.integration_name = "manual_onboarding";
-    window.__lc.product_name = "livechat";
-    ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[LiveChatWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.livechatinc.com/tracking.js",t.head.appendChild(n)}};!n.__lc.asyncInit&&e.init(),n.LiveChatWidget=n.LiveChatWidget||e}(window,document,[].slice))
+    // Filtering logic (assuming you had something like this in script.js)
+    function filterCars(category) {
+        // Add logic here if needed
+        console.log("Filtering for: " + category);
+    }
+    
+    function handleInquiry(btn) {
+        alert("Thank you for your interest! Our team will contact you shortly.");
+    }
+
+    // --- CHATBOT LOGIC ---
+    function toggleChat() {
+        const chatWindow = document.getElementById('chat-window');
+        if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
+            chatWindow.style.display = 'flex';
+        } else {
+            chatWindow.style.display = 'none';
+        }
+    }
+
+    function sendUserMessage() {
+        const inputField = document.getElementById('chat-input');
+        const messageText = inputField.value.trim();
+        
+        if (messageText === "") return;
+
+        // Display user message
+        appendMessage(messageText, 'user-msg');
+        inputField.value = '';
+
+        // Simulate bot typing delay
+        setTimeout(() => {
+            getBotReply(messageText.toLowerCase());
+        }, 600);
+    }
+
+    function appendMessage(text, className) {
+        const chatBox = document.getElementById('chat-messages');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `msg ${className}`;
+        msgDiv.textContent = text;
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
+    }
+
+    function getBotReply(msg) {
+        let reply = "Please contact our team for more details, or let me know which car you are looking for.";
+
+        // Basic keyword logic tailored for Carzone
+        if (msg.includes("hello") || msg.includes("hi") || msg.includes("sat sri akal")) {
+            reply = "Hello! Are you looking for a Sedan or an SUV?";
+        } else if (msg.includes("bmw") || msg.includes("m5")) {
+            reply = "The BMW M5 is an ultimate luxury sedan priced at ₹ 1.5 Crore. Would you like to schedule a viewing?";
+        } else if (msg.includes("mustang") || msg.includes("ford")) {
+            reply = "The Ford Mustang is available in our Sport category for ₹ 75 Lakh. It's a real head-turner!";
+        } else if (msg.includes("scorpio") || msg.includes("mahindra")) {
+            reply = "The Mahindra Scorpio is our Best Seller SUV! Current price is ₹ 18 Lakh. Want to book a test drive?";
+        } else if (msg.includes("price") || msg.includes("cost")) {
+            reply = "Our cars range from ₹ 18 Lakh to ₹ 1.5 Crore. Which specific model are you interested in?";
+        }
+
+        appendMessage(reply, 'bot-msg');
+    }
+
+    // Allow pressing 'Enter' to send messages
+    document.getElementById('chat-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') sendUserMessage();
+    });
 </script>
-<noscript><a href="https://www.livechat.com/chat-with/19657097/" rel="nofollow">Chat with us</a>, powered by <a href="https://www.livechat.com/?welcome" rel="noopener nofollow" target="_blank">LiveChat</a></noscript>
-<!-- End of LiveChat code -->
 
 </body>
 </html>
