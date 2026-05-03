@@ -6,7 +6,7 @@
     <title>Carzone Bathinda | Premium Cars</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* Modern Design */
+        /* --- SITE STYLES --- */
         body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }
         header { background: #222; color: white; padding: 40px 20px; text-align: center; }
         .filters { display: flex; justify-content: center; gap: 15px; margin: 30px 0; }
@@ -145,71 +145,125 @@
 </div>
 
 <script>
-    // Filtering logic (assuming you had something like this in script.js)
+    // ==========================================
+    // 🔴 API KEYS CONFIGURATION 🔴
+    // ==========================================
+    // Aapki Gemini AI Key yahan daal di gayi hai:
+    const API_KEY = "AIzaSyCutFXPfRExSQ0X4zjtIFxlKAjo8DHrlcM"; 
+    
+    // Yahan apni Web3Forms ki access key daalein jab aap unki site se generate kar lein:
+    const EMAIL_ACCESS_KEY = "YAHAN_WEB3FORMS_KI_KEY_AAYEGI"; 
+    // ==========================================
+
+    // --- EMAIL NOTIFICATION SYSTEM (Web3Forms) ---
+    function sendEmailToOwner(customerMessage, type) {
+        if(EMAIL_ACCESS_KEY === "YAHAN_WEB3FORMS_KI_KEY_AAYEGI") return; // Key nahi hai toh email nahi jayega
+
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                access_key: EMAIL_ACCESS_KEY,
+                subject: `New ${type} from Carzone Website!`,
+                message: `You have a new update from a customer:\n\nDetails: ${customerMessage}`
+            })
+        })
+        .then(response => response.json())
+        .then(data => console.log("Email sent successfully!"))
+        .catch(error => console.log("Email failed", error));
+    }
+
+    // --- SITE LOGIC ---
     function filterCars(category) {
-        // Add logic here if needed
         console.log("Filtering for: " + category);
     }
     
     function handleInquiry(btn) {
-        alert("Thank you for your interest! Our team will contact you shortly.");
+        const carName = btn.parentElement.querySelector('h3').innerText;
+        sendEmailToOwner(`Customer clicked Inquire Now for: ${carName}`, "Car Inquiry");
+        alert("Thank you for your interest! Our team has been notified and will contact you shortly.");
     }
 
-    // --- CHATBOT LOGIC ---
+    // --- SMART AI CHATBOT LOGIC ---
     function toggleChat() {
         const chatWindow = document.getElementById('chat-window');
-        if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
-            chatWindow.style.display = 'flex';
-        } else {
-            chatWindow.style.display = 'none';
-        }
+        chatWindow.style.display = (chatWindow.style.display === 'none' || chatWindow.style.display === '') ? 'flex' : 'none';
     }
 
-    function sendUserMessage() {
+    async function sendUserMessage() {
         const inputField = document.getElementById('chat-input');
         const messageText = inputField.value.trim();
         
         if (messageText === "") return;
 
-        // Display user message
+        // User ka message dikhayein
         appendMessage(messageText, 'user-msg');
         inputField.value = '';
 
-        // Simulate bot typing delay
-        setTimeout(() => {
-            getBotReply(messageText.toLowerCase());
-        }, 600);
+        // Email notification bhejna
+        sendEmailToOwner(`Customer asked in chat: "${messageText}"`, "Chatbot Message");
+
+        // Typing indicator
+        const chatBox = document.getElementById('chat-messages');
+        const typingDiv = document.createElement('div');
+        typingDiv.className = `msg bot-msg`;
+        typingDiv.id = `typing-indicator`;
+        typingDiv.textContent = "AI is thinking...";
+        chatBox.appendChild(typingDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // AI se reply
+        await getAIReply(messageText);
     }
 
     function appendMessage(text, className) {
         const chatBox = document.getElementById('chat-messages');
         const msgDiv = document.createElement('div');
         msgDiv.className = `msg ${className}`;
-        msgDiv.textContent = text;
+        msgDiv.innerHTML = text; 
         chatBox.appendChild(msgDiv);
-        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
+        chatBox.scrollTop = chatBox.scrollHeight; 
     }
 
-    function getBotReply(msg) {
-        let reply = "Please contact our team for more details, or let me know which car you are looking for.";
+    async function getAIReply(userMessage) {
+        const systemPrompt = `You are a helpful and polite car sales assistant for 'Carzone Bathinda'. 
+        A customer asked: "${userMessage}". 
+        Give a short, accurate answer about the car they asked for (max 3-4 lines). 
+        If they ask about cars not in the showroom, give general specs and say we can arrange it.`;
 
-        // Basic keyword logic tailored for Carzone
-        if (msg.includes("hello") || msg.includes("hi") || msg.includes("sat sri akal")) {
-            reply = "Hello! Are you looking for a Sedan or an SUV?";
-        } else if (msg.includes("bmw") || msg.includes("m5")) {
-            reply = "The BMW M5 is an ultimate luxury sedan priced at ₹ 1.5 Crore. Would you like to schedule a viewing?";
-        } else if (msg.includes("mustang") || msg.includes("ford")) {
-            reply = "The Ford Mustang is available in our Sport category for ₹ 75 Lakh. It's a real head-turner!";
-        } else if (msg.includes("scorpio") || msg.includes("mahindra")) {
-            reply = "The Mahindra Scorpio is our Best Seller SUV! Current price is ₹ 18 Lakh. Want to book a test drive?";
-        } else if (msg.includes("price") || msg.includes("cost")) {
-            reply = "Our cars range from ₹ 18 Lakh to ₹ 1.5 Crore. Which specific model are you interested in?";
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: systemPrompt }] }]
+                })
+            });
+
+            const data = await response.json();
+            
+            document.getElementById('typing-indicator').remove();
+
+            if(data.candidates && data.candidates[0].content.parts[0].text) {
+                let botReply = data.candidates[0].content.parts[0].text;
+                botReply = botReply.replace(/\*\*/g, ''); 
+                appendMessage(botReply, 'bot-msg');
+            } else {
+                appendMessage("Sorry, main samajh nahi paya.", 'bot-msg');
+            }
+
+        } catch (error) {
+            console.error("API Error:", error);
+            document.getElementById('typing-indicator')?.remove();
+            appendMessage("Network error. Kripya baad mein try karein.", 'bot-msg');
         }
-
-        appendMessage(reply, 'bot-msg');
     }
 
-    // Allow pressing 'Enter' to send messages
     document.getElementById('chat-input').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') sendUserMessage();
     });
